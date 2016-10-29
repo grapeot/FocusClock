@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>FocusClock</title>
+        <style>
+            #timer { font-size: 2em; }
+        </style>
+        <script>
+            function padZero(str) {
+                if (str.length == 1) 
+                    return '0' + str;
+                else
+                    return str;
+            }
+
+            var oldtime = 0;
+            document.addEventListener('DOMContentLoaded', function() {
+                oldtime = new Date().getTime();
+                setInterval(function() { 
+                    newtime = new Date().getTime();
+                    milliseconds = newtime - oldtime;
+                    hours = Math.floor(milliseconds / 1000 / 3600).toString();
+                    minutes = Math.floor((milliseconds / 1000 - 3600 * hours) / 60).toString();
+                    seconds = Math.floor(milliseconds / 1000 - 3600 * hours - 60 * minutes).toString();
+                    document.getElementById('timer').innerHTML = padZero(hours) + ':' + padZero(minutes) + ':' + padZero(seconds);
+                }, 1000);
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="timer">00:00:00</div>
+    </body>
+
+</html>
+
