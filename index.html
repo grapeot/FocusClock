@@ -2,6 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="initial-scale=1.0">
         <title>FocusClock</title>
         <style>
             #timer { font-size: 2em; }
@@ -14,12 +16,23 @@
                     return str;
             }
 
-            var oldtime = 0;
+            var oldTime = 0;
+            var lastUpdatedTime = 0;
             document.addEventListener('DOMContentLoaded', function() {
-                oldtime = new Date().getTime();
+                oldTime = new Date().getTime();
+                lastUpdatedTime = oldTime;
                 setInterval(function() { 
-                    newtime = new Date().getTime();
-                    milliseconds = newtime - oldtime;
+                    newTime = new Date().getTime();
+                    milliseconds = newTime - oldTime;
+
+                    // We use a trick here that the timer will be suspended when iPhone switches the focus to other apps
+                    // http://stackoverflow.com/questions/4656387/how-to-detect-in-ios-webapp-when-switching-back-to-safari-from-background
+                    if (newTime - lastUpdatedTime > 5000) {
+                        // switched back from other web apps => reset the timer
+                        oldTime = new Date().getTime();
+                    }
+
+                    lastUpdatedTime = newTime;
                     hours = Math.floor(milliseconds / 1000 / 3600).toString();
                     minutes = Math.floor((milliseconds / 1000 - 3600 * hours) / 60).toString();
                     seconds = Math.floor(milliseconds / 1000 - 3600 * hours - 60 * minutes).toString();
